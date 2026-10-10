@@ -1,0 +1,13 @@
+{
+  "name": "fels-therapeutics",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Simulazioni interattive FELS Therapeutics",
+  "scripts": {
+    "build:css": "sass --style=expanded --source-map --no-error-css palette/scss/styles.scss palette/styles.css",
+    "watch:css": "sass --watch --style=expanded --source-map --no-error-css palette/scss/styles.scss palette/styles.css"
+  },
+  "devDependencies": {
+    "sass": "^1.93.2"
+  }
+}

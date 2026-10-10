@@ -12,7 +12,6 @@ const captions = [
 ];
 const params = new URLSearchParams(location.hash.slice(1));
 let selected = Object.hasOwn(palettes, params.get('palette')) ? params.get('palette') : 'amber';
-let slide = /^[1-3]$/.test(params.get('slide') || '') ? Number(params.get('slide')) - 1 : 0;
 let comparing = params.get('view') === 'compare';
 const $ = s => document.querySelector(s);
 const text = (x,y,content,size=24,fill='#001431',extra='') => `<text x="${x}" y="${y}" font-size="${size}" fill="${fill}" ${extra}>${content}</text>`;
@@ -79,34 +78,37 @@ function cover(a) {
   s+=line(945,315,1060,405,'#73BFD3',3)+line(945,315,1010,209,'#73BFD3',3)+`<circle cx="945" cy="315" r="27" fill="${a}"/><circle cx="1060" cy="405" r="18" fill="#0075D5"/><circle cx="1010" cy="209" r="12" fill="#73BFD3"/>`;
   return base(s+footer(3,a,true),'Copertina FELS Therapeutics su fondo scuro con nuovo logo',true);
 }
+// Un solo renderer per ciascun contenuto, condiviso tra anteprima e confronto.
+const previews = [graph, diagram, cover].map((draw, index) => ({
+  draw, name: names[index], caption: captions[index]
+}));
 function render() {
-  const p=palettes[selected];
-  document.documentElement.style.setProperty('--accent',p.hex);
-  $(`#palette-name`).textContent=p.name;
-  $('#slide-type').textContent=names[slide];
-  document.querySelectorAll('input[name=palette]').forEach(el=>{el.checked=el.value===selected;});
-  document.querySelectorAll('[data-slide]').forEach(el=>el.setAttribute('aria-pressed',Number(el.dataset.slide)===slide));
-  $('#counter').textContent=`0${slide+1} / 03`;
-  $('#slide-caption').textContent=captions[slide];
-  const fn=[graph,diagram,cover][slide];
-  $('#stage').innerHTML=fn(p.hex);
-  $('#stage').hidden=comparing;$('#comparison').hidden=!comparing;
-  $('#compare').setAttribute('aria-pressed',comparing);
-  $('#compare').textContent=comparing?'Torna alla slide':'Confronta le tre palette';
-  if(comparing){$('#compare').textContent='Torna alla slide';$('#comparison').innerHTML=Object.values(palettes).map(x=>`<figure style="--mini-accent:${x.hex}"><div class="mini-slide">${fn(x.hex)}</div><figcaption><i></i>${x.name} · ${x.hex}</figcaption></figure>`).join('');}
-  $('#decision-title').textContent=`${p.name}. Una direzione da condividere.`;
-  const hash=new URLSearchParams({palette:selected,slide:String(slide+1)});if(comparing)hash.set('view','compare');
-  try{history.replaceState(null,'',`#${hash}`);}catch(e){/* The presentation also works when opened as a local file. */}
+  const p = palettes[selected];
+  document.documentElement.style.setProperty('--accent', p.hex);
+  $('#palette-name').textContent = p.name;
+  document.querySelectorAll('input[name=palette]').forEach(el => {
+    el.checked = el.value === selected;
+  });
+  $('#previews').innerHTML = previews.map(({draw, name, caption}, index) => {
+    const variants = comparing ? Object.values(palettes) : [p];
+    const figures = variants.map(variant => `<figure style="--mini-accent:${variant.hex}"><div class="stage">${draw(variant.hex)}</div><figcaption><i aria-hidden="true"></i>${variant.name} · ${variant.hex}</figcaption></figure>`).join('');
+    return `<section class="preview" aria-labelledby="preview-title-${index}"><h2 id="preview-title-${index}" class="preview-title">0${index + 1} / ${name}</h2><div class="${comparing ? 'comparison' : 'preview-slides'}">${figures}</div><p class="caption">${caption}</p></section>`;
+  }).join('');
+  $('#compare').setAttribute('aria-pressed', comparing);
+  $('#compare').textContent = comparing ? 'Torna alla palette scelta' : 'Confronta le tre palette';
+  $('#decision-title').textContent = `${p.name}. Una direzione da condividere.`;
+  const hash = new URLSearchParams({palette: selected});
+  if (comparing) hash.set('view', 'compare');
+  try { history.replaceState(null, '', `#${hash}`); } catch (e) { /* Supporto file locali. */ }
 }
-document.querySelectorAll('input[name=palette]').forEach(el=>el.addEventListener('change',()=>{selected=el.value;render();}));
-document.querySelectorAll('[data-slide]').forEach(el=>el.addEventListener('click',()=>{slide=Number(el.dataset.slide);render();}));
-const move=step=>{slide=(slide+step+3)%3;render();};
-$('#prev').addEventListener('click',()=>move(-1));$('#next').addEventListener('click',()=>move(1));
-$('#compare').addEventListener('click',()=>{comparing=!comparing;render();});
-document.addEventListener('keydown',e=>{if(e.target.matches('input,textarea,select')||e.ctrlKey||e.metaKey||e.altKey)return;if(e.key==='ArrowRight'){e.preventDefault();move(1);}if(e.key==='ArrowLeft'){e.preventDefault();move(-1);}});
+document.querySelectorAll('input[name=palette]').forEach(el => el.addEventListener('change', () => {
+  selected = el.value;
+  render();
+}));
+$('#compare').addEventListener('click', () => { comparing = !comparing; render(); });
 $('#fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else if($('#viewer').requestFullscreen)await $('#viewer').requestFullscreen();else throw new Error();}catch(e){$('#status').textContent='Schermo intero non disponibile in questo browser. Puoi ingrandire la finestra per presentare.';}});
 document.addEventListener('fullscreenchange',()=>{$('#fullscreen').textContent=document.fullscreenElement?'Esci dallo schermo intero':'Schermo intero ↗';});
-$('#copy').addEventListener('click',async()=>{if(location.protocol==='file:'){$('#status').textContent='Per condividere il link, pubblica prima la pagina su GitHub Pages.';return;}try{await navigator.clipboard.writeText(location.href);$('#status').textContent=`Link copiato: ${palettes[selected].name}, ${names[slide].toLowerCase()}.`;}catch(e){$('#link-fallback').hidden=false;$('#share-url').value=location.href;$('#share-url').select();$('#status').textContent='Seleziona e copia il link qui sotto.';}});
+$('#copy').addEventListener('click',async()=>{if(location.protocol==='file:'){$('#status').textContent='Per condividere il link, pubblica prima la pagina su GitHub Pages.';return;}try{await navigator.clipboard.writeText(location.href);$('#status').textContent=`Link copiato: ${palettes[selected].name}, tutte le anteprime.`;}catch(e){$('#link-fallback').hidden=false;$('#share-url').value=location.href;$('#share-url').select();$('#status').textContent='Seleziona e copia il link qui sotto.';}});
 $('#download').addEventListener('click',()=>{const p=palettes[selected];const data=`FELS THERAPEUTICS — PALETTE\n\nAccent: ${p.name} ${p.hex}\n${p.note}\n\nColori logo fissi\nNavy #001431\nDeep Blue #124F95\nBlue #0075D5\nCyan #2992B1\nLight Cyan #73BFD3\n\nSfondo slide chiara: #FFFFFF\nSfondo slide scura: #001431\nTesto scuro: #001431\nTesto chiaro: #FFFFFF\n\nUso: accent per la serie principale, piccoli richiami e messaggi chiave.\nSu sfondo bianco, usare testo navy sulle aree accent; evitare testo accent piccolo.\nLogo scuro: lettere e separatore bianchi; moduli cromatici preservati.\nCurve dimostrative: nessun dato sperimentale.\n`;
   const url=URL.createObjectURL(new Blob([data],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=`FELS-palette-${selected}.txt`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);$('#status').textContent=`Palette ${p.name} scaricata.`;
 });
