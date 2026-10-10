@@ -22,16 +22,25 @@
       <div class="intro-note"><span class="note-number">03</span><span>direzioni colore<br>per le presentazioni FELS</span></div>
     </section>
     <fieldset class="palettes"><legend class="sr-only">Colore accent</legend>
-      <label class="palette" style="--swatch:#F2A65A"><input type="radio" name="palette" value="amber" checked><span class="swatch"></span><span><strong>Amber</strong><small>#F2A65A · Caldo e misurato</small></span><span class="check" aria-hidden="true">✓</span></label>
-      <label class="palette" style="--swatch:#FF9400"><input type="radio" name="palette" value="orange"><span class="swatch"></span><span><strong>Molecular Orange</strong><small>#FF9400 · Netto ed energico</small></span><span class="check" aria-hidden="true">✓</span></label>
-      <label class="palette" style="--swatch:#FFC000"><input type="radio" name="palette" value="yellow"><span class="swatch"></span><span><strong>Scientific Yellow</strong><small>#FFC000 · Luminoso e deciso</small></span><span class="check" aria-hidden="true">✓</span></label>
+      <label class="palette" style="--swatch:var(--color-amber)"><input type="radio" name="palette" value="amber" checked><span class="swatch"></span><span><strong>Amber</strong><small class="palette-detail"></small></span><span class="check" aria-hidden="true">✓</span></label>
+      <label class="palette" style="--swatch:var(--color-molecularOrange)"><input type="radio" name="palette" value="molecularOrange"><span class="swatch"></span><span><strong>Molecular Orange</strong><small class="palette-detail"></small></span><span class="check" aria-hidden="true">✓</span></label>
+      <label class="palette" style="--swatch:var(--color-custom)"><input type="radio" name="palette" value="custom"><span class="swatch"></span><span><strong>Custom</strong><small class="palette-detail"></small></span><span class="check" aria-hidden="true">✓</span></label>
+    </fieldset>
+    <fieldset class="custom-controls">
+      <legend>Personalizza Custom</legend>
+      <div class="custom-fields">
+        <label for="custom-picker">Scegli colore<input id="custom-picker" type="color" aria-describedby="custom-help"></label>
+        <label for="custom-hex">Colore HEX<input id="custom-hex" type="text" spellcheck="false" autocomplete="off" autocapitalize="characters" aria-describedby="custom-help" aria-invalid="false"></label>
+        <output id="custom-swatch" class="custom-swatch" for="custom-picker custom-hex" aria-label="Colore Custom applicato"></output>
+      </div>
+      <p id="custom-help">Inserisci sei cifre HEX, con o senza #. Solo i valori completi e validi aggiornano Custom e lo selezionano; durante la digitazione resta applicato l’ultimo colore valido.</p>
     </fieldset>
     <section id="viewer" class="viewer" aria-label="Presentazione interattiva">
       <div class="viewer-toolbar"><div><span class="live-dot"></span><strong id="palette-name">Amber</strong><span class="toolbar-secondary"> / Tutte le anteprime</span></div><div class="tools"><button id="compare" aria-pressed="false">Confronta le tre palette</button><button id="fullscreen" title="Apri a schermo intero">Schermo intero <span aria-hidden="true">↗</span></button></div></div>
       <div id="previews" class="previews"></div>
     </section>
     <section class="brand-row" aria-labelledby="brand-title"><div><p class="eyebrow">BASE CROMATICA FISSA</p><h2 id="brand-title">Cinque colori. Sempre FELS.</h2><p>L’accent vive fuori dal logo: dati, passaggi chiave e titoli.</p></div><div class="brand-colors"><span style="--c:#001431"><i></i>#001431</span><span style="--c:#124F95"><i></i>#124F95</span><span style="--c:#0075D5"><i></i>#0075D5</span><span style="--c:#2992B1"><i></i>#2992B1</span><span style="--c:#73BFD3"><i></i>#73BFD3</span></div></section>
-    <section class="decision"><div><h2 id="decision-title">Una direzione da condividere.</h2><p>Il link conserva la palette selezionata e la modalità confronto. Puoi inviarlo per raccogliere una preferenza.</p></div><div class="decision-actions"><button class="primary" id="copy">Copia link della scelta</button><button id="download">Scarica palette</button></div></section>
+    <section class="decision"><div><h2 id="decision-title">Una direzione da condividere.</h2><p>Il link conserva la palette selezionata, il colore Custom e la modalità confronto. Puoi inviarlo per raccogliere una preferenza.</p></div><div class="decision-actions"><button class="primary" id="copy">Copia link della scelta</button><button id="download">Scarica palette</button></div></section>
     <p id="status" role="status" class="status"></p><div id="link-fallback" hidden><label for="share-url">Copia questo link:</label><input id="share-url" readonly></div>
   </main>
   <footer class="wrap"><span>FELS THERAPEUTICS <span class="slash">/</span> PALETTE EXPLORER</span><span>Esempi di impaginazione 16:9 · Contenuti dimostrativi</span></footer>

@@ -1,19 +1,35 @@
 'use strict';
-const palettes = {
+// Unica configurazione dei tre accent: HTML e SCSS leggono questi valori.
+const BRAND_COLORS = {
   amber: {name: 'Amber', hex: '#F2A65A', note: 'Caldo e misurato'},
-  orange: {name: 'Molecular Orange', hex: '#FF9400', note: 'Netto ed energico'},
-  yellow: {name: 'Scientific Yellow', hex: '#FFC000', note: 'Luminoso e deciso'}
+  molecularOrange: {name: 'Molecular Orange', hex: '#FF9400', note: 'Netto ed energico'},
+  custom: {name: 'Custom', hex: '#F00059', note: 'Il tuo colore'}
 };
+const DEFAULT_CUSTOM_HEX = BRAND_COLORS.custom.hex;
+function normalizeHex(value) {
+  return /^#?[0-9a-f]{6}$/i.test(value) ? `#${value.replace(/^#/, '').toUpperCase()}` : null;
+}
 const names = ['Grafico scientifico', 'Diagramma', 'Copertina scura'];
 const captions = [
   '01 / Grafico dose–risposta ispirato alla struttura della slide 4 del PDF di riferimento. Curve e punti sono simulati: servono a valutare la palette, non rappresentano risultati sperimentali.',
   '02 / Schema semplificato di degradazione proteica, ispirato alle slide 3 e 12 del PDF. L’accent identifica la piccola molecola e il passaggio conclusivo; i blu distinguono target ed E3 ligasi.',
   '03 / Copertina ispirata al titolo della slide 1 del PDF. Fondo #001431, logo adattato per la leggibilità e accent sul concetto principale.'
 ];
-const params = new URLSearchParams(location.hash.slice(1));
-let selected = Object.hasOwn(palettes, params.get('palette')) ? params.get('palette') : 'amber';
-let comparing = params.get('view') === 'compare';
+let selected = 'amber';
+let comparing = false;
 const $ = s => document.querySelector(s);
+function restoreFromHash() {
+  const params = new URLSearchParams(location.hash.slice(1));
+  // Compatibilità con i link precedenti alla nuova configurazione.
+  const aliases = {orange: 'molecularOrange', yellow: 'custom'};
+  const requested = params.get('palette');
+  const key = Object.hasOwn(aliases, requested) ? aliases[requested] : requested;
+  selected = Object.hasOwn(BRAND_COLORS, key) ? key : 'amber';
+  comparing = params.get('view') === 'compare';
+  BRAND_COLORS.custom.hex = normalizeHex(params.get('custom') || '') || DEFAULT_CUSTOM_HEX;
+  $('#custom-hex').value = BRAND_COLORS.custom.hex;
+  $('#custom-hex').setAttribute('aria-invalid', 'false');
+}
 const text = (x,y,content,size=24,fill='#001431',extra='') => `<text x="${x}" y="${y}" font-size="${size}" fill="${fill}" ${extra}>${content}</text>`;
 const line = (x1,y1,x2,y2,color='#dce2e9',width=1,extra='') => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="${width}" ${extra}/>`;
 function base(body, title, dark=false) {
@@ -83,21 +99,28 @@ const previews = [graph, diagram, cover].map((draw, index) => ({
   draw, name: names[index], caption: captions[index]
 }));
 function render() {
-  const p = palettes[selected];
-  document.documentElement.style.setProperty('--accent', p.hex);
+  const p = BRAND_COLORS[selected];
+  const style = document.documentElement.style;
+  Object.entries(BRAND_COLORS).forEach(([key, color]) => {
+    style.setProperty(`--color-${key}`, color.hex);
+    $(`input[value="${key}"]`).closest('.palette').querySelector('.palette-detail').textContent = `${color.hex} · ${color.note}`;
+  });
+  style.setProperty('--accent', p.hex);
+  $('#custom-picker').value = BRAND_COLORS.custom.hex;
+  $('#custom-swatch').textContent = BRAND_COLORS.custom.hex;
   $('#palette-name').textContent = p.name;
   document.querySelectorAll('input[name=palette]').forEach(el => {
     el.checked = el.value === selected;
   });
   $('#previews').innerHTML = previews.map(({draw, name, caption}, index) => {
-    const variants = comparing ? Object.values(palettes) : [p];
+    const variants = comparing ? Object.values(BRAND_COLORS) : [p];
     const figures = variants.map(variant => `<figure style="--mini-accent:${variant.hex}"><div class="stage">${draw(variant.hex)}</div><figcaption><i aria-hidden="true"></i>${variant.name} · ${variant.hex}</figcaption></figure>`).join('');
     return `<section class="preview" aria-labelledby="preview-title-${index}"><h2 id="preview-title-${index}" class="preview-title">0${index + 1} / ${name}</h2><div class="${comparing ? 'comparison' : 'preview-slides'}">${figures}</div><p class="caption">${caption}</p></section>`;
   }).join('');
   $('#compare').setAttribute('aria-pressed', comparing);
   $('#compare').textContent = comparing ? 'Torna alla palette scelta' : 'Confronta le tre palette';
   $('#decision-title').textContent = `${p.name}. Una direzione da condividere.`;
-  const hash = new URLSearchParams({palette: selected});
+  const hash = new URLSearchParams({palette: selected, custom: BRAND_COLORS.custom.hex.slice(1)});
   if (comparing) hash.set('view', 'compare');
   try { history.replaceState(null, '', `#${hash}`); } catch (e) { /* Supporto file locali. */ }
 }
@@ -105,11 +128,35 @@ document.querySelectorAll('input[name=palette]').forEach(el => el.addEventListen
   selected = el.value;
   render();
 }));
+function applyCustomColor(value) {
+  const hex = normalizeHex(value);
+  if (!hex) return false;
+  BRAND_COLORS.custom.hex = hex;
+  selected = 'custom';
+  $('#custom-hex').value = hex;
+  $('#custom-hex').setAttribute('aria-invalid', 'false');
+  render();
+  return true;
+}
+$('#custom-hex').addEventListener('input', event => {
+  const value = event.target.value;
+  if (!applyCustomColor(value)) {
+    // Mantieni la bozza e l'ultimo colore valido durante la digitazione.
+    event.target.setAttribute('aria-invalid', String(!/^#?[0-9a-f]{0,6}$/i.test(value)));
+  }
+});
+$('#custom-hex').addEventListener('blur', event => {
+  event.target.setAttribute('aria-invalid', String(!normalizeHex(event.target.value)));
+});
+$('#custom-picker').addEventListener('input', event => applyCustomColor(event.target.value));
+$('#custom-picker').addEventListener('change', event => applyCustomColor(event.target.value));
+window.addEventListener('hashchange', () => { restoreFromHash(); render(); });
 $('#compare').addEventListener('click', () => { comparing = !comparing; render(); });
 $('#fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else if($('#viewer').requestFullscreen)await $('#viewer').requestFullscreen();else throw new Error();}catch(e){$('#status').textContent='Schermo intero non disponibile in questo browser. Puoi ingrandire la finestra per presentare.';}});
 document.addEventListener('fullscreenchange',()=>{$('#fullscreen').textContent=document.fullscreenElement?'Esci dallo schermo intero':'Schermo intero ↗';});
-$('#copy').addEventListener('click',async()=>{if(location.protocol==='file:'){$('#status').textContent='Per condividere il link, pubblica prima la pagina su GitHub Pages.';return;}try{await navigator.clipboard.writeText(location.href);$('#status').textContent=`Link copiato: ${palettes[selected].name}, tutte le anteprime.`;}catch(e){$('#link-fallback').hidden=false;$('#share-url').value=location.href;$('#share-url').select();$('#status').textContent='Seleziona e copia il link qui sotto.';}});
-$('#download').addEventListener('click',()=>{const p=palettes[selected];const data=`FELS THERAPEUTICS — PALETTE\n\nAccent: ${p.name} ${p.hex}\n${p.note}\n\nColori logo fissi\nNavy #001431\nDeep Blue #124F95\nBlue #0075D5\nCyan #2992B1\nLight Cyan #73BFD3\n\nSfondo slide chiara: #FFFFFF\nSfondo slide scura: #001431\nTesto scuro: #001431\nTesto chiaro: #FFFFFF\n\nUso: accent per la serie principale, piccoli richiami e messaggi chiave.\nSu sfondo bianco, usare testo navy sulle aree accent; evitare testo accent piccolo.\nLogo scuro: lettere e separatore bianchi; moduli cromatici preservati.\nCurve dimostrative: nessun dato sperimentale.\n`;
+$('#copy').addEventListener('click',async()=>{if(location.protocol==='file:'){$('#status').textContent='Per condividere il link, pubblica prima la pagina su GitHub Pages.';return;}try{await navigator.clipboard.writeText(location.href);$('#status').textContent=`Link copiato: ${BRAND_COLORS[selected].name} ${BRAND_COLORS[selected].hex}, tutte le anteprime.`;}catch(e){$('#link-fallback').hidden=false;$('#share-url').value=location.href;$('#share-url').select();$('#status').textContent='Seleziona e copia il link qui sotto.';}});
+$('#download').addEventListener('click',()=>{const p=BRAND_COLORS[selected];const data=`FELS THERAPEUTICS — PALETTE\n\nAccent: ${p.name} ${p.hex}\n${p.note}\n\nColori logo fissi\nNavy #001431\nDeep Blue #124F95\nBlue #0075D5\nCyan #2992B1\nLight Cyan #73BFD3\n\nSfondo slide chiara: #FFFFFF\nSfondo slide scura: #001431\nTesto scuro: #001431\nTesto chiaro: #FFFFFF\n\nUso: accent per la serie principale, piccoli richiami e messaggi chiave.\nSu sfondo bianco, usare testo navy sulle aree accent; evitare testo accent piccolo.\nLogo scuro: lettere e separatore bianchi; moduli cromatici preservati.\nCurve dimostrative: nessun dato sperimentale.\n`;
   const url=URL.createObjectURL(new Blob([data],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=`FELS-palette-${selected}.txt`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);$('#status').textContent=`Palette ${p.name} scaricata.`;
 });
+restoreFromHash();
 render();

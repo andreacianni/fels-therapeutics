@@ -1,7 +1,6 @@
 :root {
   --navy:#001431;
   --blue:#124F95;
-  --accent:#F2A65A;
   --ink:#10233d;
   --muted:#58677a;
   --line:#dce2e9;
@@ -189,6 +188,78 @@ h1 {
 
 .palette:has(input:checked) .check {
   visibility: visible;
+}
+
+.custom-controls {
+  margin: 0 0 26px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+}
+.custom-controls legend {
+  padding: 0 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.custom-controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12px;
+  min-width: 0;
+}
+.custom-controls input {
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: white;
+}
+.custom-controls input[type=color] {
+  width: 70px;
+  padding: 4px;
+  cursor: pointer;
+}
+.custom-controls input[type=text] {
+  width: 150px;
+  max-width: 100%;
+  padding: 10px;
+  color: var(--navy);
+  font-family: monospace;
+}
+.custom-controls input[aria-invalid=true] {
+  border-color: var(--navy);
+  border-style: dashed;
+}
+.custom-controls p {
+  margin: 12px 0 0;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.custom-fields {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.custom-swatch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  font-family: monospace;
+  font-size: 13px;
+}
+.custom-swatch::before {
+  content: "";
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--color-custom);
 }
 
 .viewer {
@@ -597,7 +668,7 @@ footer {
   }
 }
 @media print {
-  .masthead, .intro, .palettes, .viewer-toolbar, .brand-row, .decision, .status, footer, .caption, #link-fallback {
+  .masthead, .intro, .palettes, .custom-controls, .viewer-toolbar, .brand-row, .decision, .status, footer, .caption, #link-fallback {
     display: none;
   }
   .wrap {
