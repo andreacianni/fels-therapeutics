@@ -1,0 +1,39 @@
+# Sistema operativo ed editor
+.DS_Store
+Thumbs.db
+Desktop.ini
+.vscode/
+.idea/
+
+# File temporanei, backup e log
+~$*
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*.log
+*~
+
+# Configurazioni locali e credenziali
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Dipendenze, cache e output locali
+node_modules/
+__pycache__/
+.cache/
+coverage/
+playwright-report/
+test-results/
+
+# Deliverable ufficiali: non destinati a questo repository
+*.[pP][dD][fF]
+*.[pP][pP][tT]
+*.[pP][pP][tT][xX]
+*.[pP][pP][tT][mM]
+*.[pP][oO][tT][xX]
+*.[pP][oO][tT][mM]
