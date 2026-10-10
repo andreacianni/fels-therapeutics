@@ -1,26 +1,26 @@
 'use strict';
-// Unica configurazione dei tre accent: HTML e SCSS leggono questi valori.
+// Single configuration for all three accents: HTML and SCSS use these values.
 const BRAND_COLORS = {
-  amber: {name: 'Amber', hex: '#F2A65A', note: 'Caldo e misurato'},
-  molecularOrange: {name: 'Molecular Orange', hex: '#FF9400', note: 'Netto ed energico'},
-  custom: {name: 'Custom', hex: '#44E49F', note: 'Il tuo colore'}
+  amber: {name: 'Amber', hex: '#F2A65A', note: 'Warm and balanced'},
+  molecularOrange: {name: 'Molecular Orange', hex: '#FF9400', note: 'Bold and energetic'},
+  custom: {name: 'Custom', hex: '#44E49F', note: 'Your colour'}
 };
 const DEFAULT_CUSTOM_HEX = BRAND_COLORS.custom.hex;
 function normalizeHex(value) {
   return /^#?[0-9a-f]{6}$/i.test(value) ? `#${value.replace(/^#/, '').toUpperCase()}` : null;
 }
-const names = ['Grafico scientifico', 'Diagramma', 'Copertina scura'];
+const names = ['Scientific chart', 'Diagram', 'Dark cover'];
 const captions = [
-  '01 / Grafico dose–risposta ispirato alla struttura della slide 4 del PDF di riferimento. Curve e punti sono simulati: servono a valutare la palette, non rappresentano risultati sperimentali.',
-  '02 / Schema semplificato di degradazione proteica, ispirato alle slide 3 e 12 del PDF. L’accent identifica la piccola molecola e il passaggio conclusivo; i blu distinguono target ed E3 ligasi.',
-  '03 / Copertina ispirata al titolo della slide 1 del PDF. Fondo #001431, logo adattato per la leggibilità e accent sul concetto principale.'
+  '01 / Dose–response chart inspired by the layout of slide 4 in the reference PDF. Curves and points are simulated: they are used to evaluate the palette and do not represent experimental results.',
+  '02 / Simplified protein degradation diagram inspired by slides 3 and 12 in the PDF. The accent highlights the small molecule and the final step; blue tones distinguish the target and E3 ligase.',
+  '03 / Cover inspired by the title on slide 1 in the PDF. Background #001431, logo adapted for readability and accent on the main concept.'
 ];
 let selected = 'amber';
 let comparing = false;
 const $ = s => document.querySelector(s);
 function restoreFromHash() {
   const params = new URLSearchParams(location.hash.slice(1));
-  // Compatibilità con i link precedenti alla nuova configurazione.
+  // Support links created before the new configuration.
   const aliases = {orange: 'molecularOrange', yellow: 'custom'};
   const requested = params.get('palette');
   const key = Object.hasOwn(aliases, requested) ? aliases[requested] : requested;
@@ -62,7 +62,7 @@ function graph(a) {
   s+=line(860,349,902,349,'#124F95',4,'stroke-dasharray="7 5"')+`<rect x="877" y="345" width="8" height="8" fill="#124F95"/>`+text(917,355,'Reference',17);
   s+=line(858,387,1109,387,'#dce2e9')+text(858,424,'Accent = the key series',19,'#001431','font-weight="700"')+text(858,458,'Blue = the comparator',17,'#58677a')+text(858,496,'Shape + line style retain',16,'#58677a')+text(858,520,'meaning beyond colour.',16,'#58677a');
   s+=text(64,215,'ILLUSTRATIVE DATA · NOT EXPERIMENTAL RESULTS',11,'#697b90','letter-spacing="1"');
-  return base(s+footer(1,a),'Grafico dose–risposta con dati simulati e serie evidenziata');
+  return base(s+footer(1,a),'Dose–response chart with simulated data and a highlighted series');
 }
 function diagram(a) {
   let s=header('MECHANISM / TARGETED PROTEIN DEGRADATION','A small molecule. A coordinated mechanism.','A simplified schematic of target recruitment and degradation',a);
@@ -83,7 +83,7 @@ function diagram(a) {
   s+=text(822,487,'Ubiquitination → degradation',18,'#001431','font-weight="700"')+text(822,514,'Tagged target is broken down',15,'#58677a');
   [415,782].forEach(x=>{s+=`<path d="M${x-5} 374 L${x+3} 382 L${x-5} 390" fill="none" stroke="#124F95" stroke-width="2"/>`;});
   s+=`<rect x="64" y="557" width="1072" height="35" rx="4" fill="${a}"/>`+text(84,580,'BT: biological target     /     E3: ubiquitin ligase     /     Schematic for visual evaluation only',14);
-  return base(s+footer(2,a),'Diagramma semplificato: target, piccola molecola, reclutamento e degradazione');
+  return base(s+footer(2,a),'Simplified diagram: target, small molecule, recruitment and degradation');
 }
 function cover(a) {
   let s=`<image href="assets/fels-logo-dark.svg" x="64" y="59" width="230" height="113"/>`;
@@ -92,9 +92,9 @@ function cover(a) {
   s+=line(66,485,442,485,a,3)+text(66,529,'Precision therapeutics. A clear scientific vision.',20,'#c5d3e4')+text(66,566,'NON-CONFIDENTIAL PRESENTATION',12,'#a8bed6','letter-spacing="2"');
   [[945,315,110],[1060,405,74],[1010,209,50]].forEach(([x,y,r])=>{s+=`<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="#2992B1" stroke-width="1.5"/>`;});
   s+=line(945,315,1060,405,'#73BFD3',3)+line(945,315,1010,209,'#73BFD3',3)+`<circle cx="945" cy="315" r="27" fill="${a}"/><circle cx="1060" cy="405" r="18" fill="#0075D5"/><circle cx="1010" cy="209" r="12" fill="#73BFD3"/>`;
-  return base(s+footer(3,a,true),'Copertina FELS Therapeutics su fondo scuro con nuovo logo',true);
+  return base(s+footer(3,a,true),'FELS Therapeutics cover on a dark background with the new logo',true);
 }
-// Un solo renderer per ciascun contenuto, condiviso tra anteprima e confronto.
+// One renderer per slide, shared by previews and comparison.
 const previews = [graph, diagram, cover].map((draw, index) => ({
   draw, name: names[index], caption: captions[index]
 }));
@@ -107,7 +107,6 @@ function render() {
   });
   style.setProperty('--accent', p.hex);
   $('#custom-picker').value = BRAND_COLORS.custom.hex;
-  $('#custom-swatch').textContent = BRAND_COLORS.custom.hex;
   $('#palette-name').textContent = p.name;
   document.querySelectorAll('input[name=palette]').forEach(el => {
     el.checked = el.value === selected;
@@ -118,11 +117,11 @@ function render() {
     return `<section class="preview" aria-labelledby="preview-title-${index}"><h2 id="preview-title-${index}" class="preview-title">0${index + 1} / ${name}</h2><div class="${comparing ? 'comparison' : 'preview-slides'}">${figures}</div><p class="caption">${caption}</p></section>`;
   }).join('');
   $('#compare').setAttribute('aria-pressed', comparing);
-  $('#compare').textContent = comparing ? 'Torna alla palette scelta' : 'Confronta le tre palette';
-  $('#decision-title').textContent = `${p.name}. Una direzione da condividere.`;
+  $('#compare').textContent = comparing ? 'Back to the selected palette' : 'Compare all three palettes';
+  $('#decision-title').textContent = `${p.name}. A direction to share.`;
   const hash = new URLSearchParams({palette: selected, custom: BRAND_COLORS.custom.hex.slice(1)});
   if (comparing) hash.set('view', 'compare');
-  try { history.replaceState(null, '', `#${hash}`); } catch (e) { /* Supporto file locali. */ }
+  try { history.replaceState(null, '', `#${hash}`); } catch (e) { /* Support local files. */ }
 }
 document.querySelectorAll('input[name=palette]').forEach(el => el.addEventListener('change', () => {
   selected = el.value;
@@ -141,7 +140,7 @@ function applyCustomColor(value) {
 $('#custom-hex').addEventListener('input', event => {
   const value = event.target.value;
   if (!applyCustomColor(value)) {
-    // Mantieni la bozza e l'ultimo colore valido durante la digitazione.
+    // Keep the draft and the last valid colour while typing.
     event.target.setAttribute('aria-invalid', String(!/^#?[0-9a-f]{0,6}$/i.test(value)));
   }
 });
@@ -150,13 +149,18 @@ $('#custom-hex').addEventListener('blur', event => {
 });
 $('#custom-picker').addEventListener('input', event => applyCustomColor(event.target.value));
 $('#custom-picker').addEventListener('change', event => applyCustomColor(event.target.value));
+$('#custom-reset').addEventListener('click', () => {
+  applyCustomColor(DEFAULT_CUSTOM_HEX);
+  $('#status').textContent = `Custom reset: ${BRAND_COLORS.custom.hex}.`;
+  if (!$('#link-fallback').hidden) $('#share-url').value = location.href;
+});
 window.addEventListener('hashchange', () => { restoreFromHash(); render(); });
 $('#compare').addEventListener('click', () => { comparing = !comparing; render(); });
-$('#fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else if($('#viewer').requestFullscreen)await $('#viewer').requestFullscreen();else throw new Error();}catch(e){$('#status').textContent='Schermo intero non disponibile in questo browser. Puoi ingrandire la finestra per presentare.';}});
-document.addEventListener('fullscreenchange',()=>{$('#fullscreen').textContent=document.fullscreenElement?'Esci dallo schermo intero':'Schermo intero ↗';});
-$('#copy').addEventListener('click',async()=>{if(location.protocol==='file:'){$('#status').textContent='Per condividere il link, pubblica prima la pagina su GitHub Pages.';return;}try{await navigator.clipboard.writeText(location.href);$('#status').textContent=`Link copiato: ${BRAND_COLORS[selected].name} ${BRAND_COLORS[selected].hex}, tutte le anteprime.`;}catch(e){$('#link-fallback').hidden=false;$('#share-url').value=location.href;$('#share-url').select();$('#status').textContent='Seleziona e copia il link qui sotto.';}});
-$('#download').addEventListener('click',()=>{const p=BRAND_COLORS[selected];const data=`FELS THERAPEUTICS — PALETTE\n\nAccent: ${p.name} ${p.hex}\n${p.note}\n\nColori logo fissi\nNavy #001431\nDeep Blue #124F95\nBlue #0075D5\nCyan #2992B1\nLight Cyan #73BFD3\n\nSfondo slide chiara: #FFFFFF\nSfondo slide scura: #001431\nTesto scuro: #001431\nTesto chiaro: #FFFFFF\n\nUso: accent per la serie principale, piccoli richiami e messaggi chiave.\nSu sfondo bianco, usare testo navy sulle aree accent; evitare testo accent piccolo.\nLogo scuro: lettere e separatore bianchi; moduli cromatici preservati.\nCurve dimostrative: nessun dato sperimentale.\n`;
-  const url=URL.createObjectURL(new Blob([data],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=`FELS-palette-${selected}.txt`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);$('#status').textContent=`Palette ${p.name} scaricata.`;
+$('#fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else if($('#viewer').requestFullscreen)await $('#viewer').requestFullscreen();else throw new Error();}catch(e){$('#status').textContent='Fullscreen is unavailable in this browser. You can enlarge the window to present.';}});
+document.addEventListener('fullscreenchange',()=>{$('#fullscreen').textContent=document.fullscreenElement?'Exit fullscreen':'Fullscreen ↗';});
+$('#copy').addEventListener('click',async()=>{if(location.protocol==='file:'){$('#status').textContent='To share the link, publish the page on GitHub Pages first.';return;}try{await navigator.clipboard.writeText(location.href);$('#status').textContent=`Link copied: ${BRAND_COLORS[selected].name} ${BRAND_COLORS[selected].hex}, all previews.`;}catch(e){$('#link-fallback').hidden=false;$('#share-url').value=location.href;$('#share-url').select();$('#status').textContent='Select and copy the link below.';}});
+$('#download').addEventListener('click',()=>{const p=BRAND_COLORS[selected];const data=`FELS THERAPEUTICS — PALETTE\n\nAccent: ${p.name} ${p.hex}\n${p.note}\n\nFixed logo colours\nNavy #001431\nDeep Blue #124F95\nBlue #0075D5\nCyan #2992B1\nLight Cyan #73BFD3\n\nLight slide background: #FFFFFF\nDark slide background: #001431\nDark text: #001431\nLight text: #FFFFFF\n\nUsage: accent for the main series, small highlights and key messages.\nOn a white background, use navy text on accent areas; avoid small accent-coloured text.\nDark logo: white letters and separator; colour modules preserved.\nDemonstration curves: no experimental data.\n`;
+  const url=URL.createObjectURL(new Blob([data],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=`FELS-palette-${selected}.txt`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);$('#status').textContent=`Palette ${p.name} downloaded.`;
 });
 restoreFromHash();
 render();

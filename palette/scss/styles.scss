@@ -1,8 +1,8 @@
-// Sorgente degli stili: modificare qui, poi eseguire npm run build:css.
+// Styles source: edit here, then run npm run build:css.
 :root {
   --navy:#001431;
   --blue:#124F95;
-  // Accent e colori delle opzioni sono impostati da BRAND_COLORS in app.js.
+  // Accent and option colours are set by BRAND_COLORS in app.js.
   --ink:#10233d;
   --muted:#58677a;
   --line:#dce2e9;
@@ -135,7 +135,8 @@ h1 {
   border: 0;
   margin: 0 0 26px;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
   gap: 12px;
 }
 
@@ -145,8 +146,13 @@ h1 {
   border-radius: 8px;
   padding: 18px;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   gap: 14px;
   align-items: center;
+  text-align: center;
+  min-width: 0;
+  min-height: 160px;
   cursor: pointer;
   position: relative;
 }
@@ -184,7 +190,9 @@ h1 {
 }
 
 .check {
-  margin-left: auto;
+  position: absolute;
+  top: 12px;
+  right: 12px;
   visibility: hidden;
 }
 
@@ -193,17 +201,17 @@ h1 {
 }
 
 .custom-controls {
-  margin: 0 0 26px;
+  margin: 0;
   padding: 18px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: white;
-
-  legend {
-    padding: 0 6px;
-    font-size: 14px;
-    font-weight: 600;
-  }
+  min-width: 0;
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
 
   label {
     display: flex;
@@ -214,21 +222,21 @@ h1 {
   }
 
   input {
-    height: 44px;
+    height: 36px;
     border: 1px solid var(--line);
     border-radius: 6px;
     background: white;
   }
 
   input[type=color] {
-    width: 70px;
+    width: 46px;
     padding: 4px;
     cursor: pointer;
   }
 
   input[type=text] {
-    width: 150px;
-    max-width: 100%;
+    width: 100%;
+    min-width: 0;
     padding: 10px;
     color: var(--navy);
     font-family: monospace;
@@ -239,37 +247,32 @@ h1 {
     border-style: dashed;
   }
 
-  p {
-    margin: 12px 0 0;
-    font-size: 11px;
-    line-height: 1.6;
-    color: var(--muted);
+}
+
+.custom-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
+  h2 {
+    margin: 0;
+    font-size: 12px;
+    letter-spacing: 0;
+  }
+
+  button {
+    padding: 3px 5px;
+    font-size: 10px;
+    flex-shrink: 0;
   }
 }
 
 .custom-fields {
-  display: flex;
-  align-items: flex-end;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-.custom-swatch {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 44px;
-  font-family: monospace;
-  font-size: 13px;
-
-  &::before {
-    content: '';
-    width: 36px;
-    height: 36px;
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    background: var(--color-custom);
-  }
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: end;
+  gap: 12px;
 }
 
 .viewer {
@@ -529,6 +532,11 @@ footer {
     max-width: 1400px;
   }
 }
+@media (max-width: 1100px) {
+  .palettes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 @media (max-width: 900px) {
   .wrap {
     padding: 0 24px;
@@ -614,13 +622,7 @@ footer {
   .palette {
     padding: 12px 15px;
   }
-  .palette > span:nth-of-type(2) {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
   .palette small {
-    margin-top: 0;
     font-size: 10px;
   }
   .palette strong {

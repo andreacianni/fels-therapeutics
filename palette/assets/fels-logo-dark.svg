@@ -35,11 +35,11 @@
   <title
      id="title">FELS Therapeutics</title>
   <desc
-     id="desc">Logo FELS Therapeutics, tre moduli E nei colori blu e cyan.</desc>
+     id="desc">FELS Therapeutics logo, three E modules in blue and cyan.</desc>
   <title
-     id="title1">FELS Therapeutics — 1C E Molecular Links, esplorazione a tre elementi</title>
+     id="title1">FELS Therapeutics — 1C E Molecular Links, three-element exploration</title>
   <desc
-     id="desc1">Logo vettoriale ricostruito dal riferimento raster. F, L, S navy, E a tre elementi, separatore e THERAPEUTICS spaziato. Tutte le lettere sono tracciati; fondo trasparente.</desc>
+     id="desc1">Vector logo reconstructed from the raster reference. Navy F, L and S, three-element E, separator and spaced THERAPEUTICS lettering. All letters are paths; transparent background.</desc>
   <defs
      id="defs4">
     <linearGradient
@@ -169,7 +169,7 @@
          d="m 263,0 h 34 q 5,0 5,4 c 0,6 -4,9 -10,9 h -29 c -8,0 -10,4 -10,10 0,6 5,8 15,11 l 16,4 c 14,4 21,10 21,23 0,14 -10,21 -23,21 h -35 c -4,0 -7,-2 -7,-6 0,-5 3,-8 8,-8 h 32 c 7,0 10,-2 10,-8 0,-6 -4,-8 -12,-10 L 260,45 C 245,41 238,36 238,24 238,9 247,0 263,0 Z" />
       <g
          id="E-three-layered-modules"
-         aria-label="E: tre moduli stratificati">
+         aria-label="E: three layered modules">
         <path
            id="module-top-1"
            fill="url(#blue)"

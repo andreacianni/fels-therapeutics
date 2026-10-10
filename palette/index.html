@@ -1,49 +1,47 @@
 <!doctype html>
-<html lang="it">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#001431">
-  <meta name="description" content="Tre direzioni colore per FELS Therapeutics. Confronta le palette in una presentazione interattiva con esempi di slide scientifiche.">
-  <title>FELS Therapeutics — Tre direzioni colore</title>
+  <meta name="description" content="Three colour directions for FELS Therapeutics. Compare palettes in an interactive presentation with scientific slide examples.">
+  <title>FELS Therapeutics — Three colour directions</title>
   <link rel="icon" href="assets/fels-logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
   <script src="app.js" defer></script>
 </head>
 <body>
-  <a class="skip" href="#viewer">Vai alla presentazione</a>
+  <a class="skip" href="#viewer">Skip to the presentation</a>
   <header class="masthead wrap">
     <img src="assets/fels-logo.svg" alt="FELS Therapeutics" width="142" height="70">
-    <span>IDENTITÀ VISIVA <span class="slash">/</span> STUDIO COLORE</span>
+    <span>VISUAL IDENTITY <span class="slash">/</span> COLOUR STUDY</span>
   </header>
   <main class="wrap">
     <section class="intro">
-      <div><p class="eyebrow">UN’IDENTITÀ. TRE ACCENT.</p><h1>Il colore, nella pratica.</h1><p class="lead">Scegli una palette e guardala sulle stesse slide.<br> Il logo resta il punto fermo. L’accent mette a fuoco il messaggio.</p></div>
-      <div class="intro-note"><span class="note-number">03</span><span>direzioni colore<br>per le presentazioni FELS</span></div>
+      <div><p class="eyebrow">ONE IDENTITY. THREE ACCENTS.</p><h1>Colour, in practice.</h1><p class="lead">Choose a palette and see it on the same slides.<br> The logo stays constant. The accent brings the message into focus.</p></div>
+      <div class="intro-note"><span class="note-number">03</span><span>colour directions<br>for FELS presentations</span></div>
     </section>
-    <fieldset class="palettes"><legend class="sr-only">Colore accent</legend>
+    <section class="brand-row" aria-labelledby="brand-title"><div><p class="eyebrow">FELS CORE COLOURS</p><h2 id="brand-title">Five colours. Always FELS.</h2><p>The accent works outside the logo: data, key steps and headlines.</p></div><div class="brand-colors"><span style="--c:#001431"><i></i>#001431</span><span style="--c:#124F95"><i></i>#124F95</span><span style="--c:#0075D5"><i></i>#0075D5</span><span style="--c:#2992B1"><i></i>#2992B1</span><span style="--c:#73BFD3"><i></i>#73BFD3</span></div></section>
+    <fieldset class="palettes"><legend class="sr-only">Accent colour</legend>
       <label class="palette" style="--swatch:var(--color-amber)"><input type="radio" name="palette" value="amber" checked><span class="swatch"></span><span><strong>Amber</strong><small class="palette-detail"></small></span><span class="check" aria-hidden="true">✓</span></label>
       <label class="palette" style="--swatch:var(--color-molecularOrange)"><input type="radio" name="palette" value="molecularOrange"><span class="swatch"></span><span><strong>Molecular Orange</strong><small class="palette-detail"></small></span><span class="check" aria-hidden="true">✓</span></label>
       <label class="palette" style="--swatch:var(--color-custom)"><input type="radio" name="palette" value="custom"><span class="swatch"></span><span><strong>Custom</strong><small class="palette-detail"></small></span><span class="check" aria-hidden="true">✓</span></label>
+      <section class="custom-controls" aria-labelledby="custom-title">
+        <div class="custom-heading"><h2 id="custom-title">Customise Custom</h2><button id="custom-reset" type="button" aria-label="Restore the default Custom colour">Reset</button></div>
+        <div class="custom-fields">
+          <label for="custom-picker">Colour<input id="custom-picker" type="color"></label>
+          <label for="custom-hex">HEX<input id="custom-hex" type="text" spellcheck="false" autocomplete="off" autocapitalize="characters" aria-label="HEX colour: six digits, with or without a hash" aria-invalid="false"></label>
+        </div>
+      </section>
     </fieldset>
-    <fieldset class="custom-controls">
-      <legend>Personalizza Custom</legend>
-      <div class="custom-fields">
-        <label for="custom-picker">Scegli colore<input id="custom-picker" type="color" aria-describedby="custom-help"></label>
-        <label for="custom-hex">Colore HEX<input id="custom-hex" type="text" spellcheck="false" autocomplete="off" autocapitalize="characters" aria-describedby="custom-help" aria-invalid="false"></label>
-        <output id="custom-swatch" class="custom-swatch" for="custom-picker custom-hex" aria-label="Colore Custom applicato"></output>
-      </div>
-      <p id="custom-help">Inserisci sei cifre HEX, con o senza #. Solo i valori completi e validi aggiornano Custom e lo selezionano; durante la digitazione resta applicato l’ultimo colore valido.</p>
-    </fieldset>
-    <section id="viewer" class="viewer" aria-label="Presentazione interattiva">
-      <div class="viewer-toolbar"><div><span class="live-dot"></span><strong id="palette-name">Amber</strong><span class="toolbar-secondary"> / Tutte le anteprime</span></div><div class="tools"><button id="compare" aria-pressed="false">Confronta le tre palette</button><button id="fullscreen" title="Apri a schermo intero">Schermo intero <span aria-hidden="true">↗</span></button></div></div>
+    <section id="viewer" class="viewer" aria-label="Interactive presentation">
+      <div class="viewer-toolbar"><div><span class="live-dot"></span><strong id="palette-name">Amber</strong><span class="toolbar-secondary"> / All previews</span></div><div class="tools"><button id="compare" aria-pressed="false">Compare all three palettes</button><button id="fullscreen" title="Open fullscreen">Fullscreen <span aria-hidden="true">↗</span></button></div></div>
       <div id="previews" class="previews"></div>
     </section>
-    <section class="brand-row" aria-labelledby="brand-title"><div><p class="eyebrow">BASE CROMATICA FISSA</p><h2 id="brand-title">Cinque colori. Sempre FELS.</h2><p>L’accent vive fuori dal logo: dati, passaggi chiave e titoli.</p></div><div class="brand-colors"><span style="--c:#001431"><i></i>#001431</span><span style="--c:#124F95"><i></i>#124F95</span><span style="--c:#0075D5"><i></i>#0075D5</span><span style="--c:#2992B1"><i></i>#2992B1</span><span style="--c:#73BFD3"><i></i>#73BFD3</span></div></section>
-    <section class="decision"><div><h2 id="decision-title">Una direzione da condividere.</h2><p>Il link conserva la palette selezionata, il colore Custom e la modalità confronto. Puoi inviarlo per raccogliere una preferenza.</p></div><div class="decision-actions"><button class="primary" id="copy">Copia link della scelta</button><button id="download">Scarica palette</button></div></section>
-    <p id="status" role="status" class="status"></p><div id="link-fallback" hidden><label for="share-url">Copia questo link:</label><input id="share-url" readonly></div>
+    <section class="decision"><div><h2 id="decision-title">A direction to share.</h2><p>The link preserves the selected palette, Custom colour and comparison mode. Share it to gather feedback.</p></div><div class="decision-actions"><button class="primary" id="copy">Copy selection link</button><button id="download">Download palette</button></div></section>
+    <p id="status" role="status" class="status"></p><div id="link-fallback" hidden><label for="share-url">Copy this link:</label><input id="share-url" readonly></div>
   </main>
-  <footer class="wrap"><span>FELS THERAPEUTICS <span class="slash">/</span> PALETTE EXPLORER</span><span>Esempi di impaginazione 16:9 · Contenuti dimostrativi</span></footer>
-  <noscript><p class="wrap">Attiva JavaScript per vedere le tre anteprime e cambiare palette.</p></noscript>
+  <footer class="wrap"><span>FELS THERAPEUTICS <span class="slash">/</span> PALETTE EXPLORER</span><span>16:9 layout examples · Demonstration content</span></footer>
+  <noscript><p class="wrap">Enable JavaScript to view all three previews and change palettes.</p></noscript>
 </body>
 </html>
