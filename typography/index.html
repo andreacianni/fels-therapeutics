@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#001431">
+  <meta name="description" content="Confronta sette famiglie sans-serif su tre slide scientifiche FELS Therapeutics, con titoli e testi indipendenti.">
+  <title>FELS Therapeutics — Typography Explorer</title>
+  <link rel="icon" href="../palette/assets/fels-logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@100..1000&amp;family=IBM+Plex+Sans:wght@100..700&amp;family=Manrope:wght@200..800&amp;family=Nunito+Sans:wght@200..1000&amp;family=Outfit:wght@100..900&amp;family=Plus+Jakarta+Sans:wght@200..800&amp;family=Sora:wght@100..800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="slides.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#viewer">Vai alle anteprime</a>
+  <header class="masthead wrap">
+    <img src="../palette/assets/fels-logo.svg" alt="FELS Therapeutics" width="142" height="70">
+    <span>IDENTITÀ VISIVA <span class="slash">/</span> STUDIO TIPOGRAFICO</span>
+  </header>
+  <main class="wrap">
+    <section class="intro">
+      <div><p class="eyebrow">UN’IDENTITÀ. DUE FAMIGLIE.</p><h1>Il carattere, nella pratica.</h1><p class="lead">Scegli una coppia tipografica e guardala sulle stesse slide.<br> Confronta leggibilità, gerarchia e personalità.</p></div>
+      <div class="intro-note"><span class="note-number">07</span><span>famiglie sans-serif<br>per le presentazioni FELS</span></div>
+    </section>
+    <form id="type-controls" class="type-controls" aria-label="Configurazione tipografica">
+      <fieldset class="type-card"><legend>TITOLI</legend>
+        <label for="heading-font">Famiglia<select id="heading-font" name="headings"></select></label>
+        <div class="control-row"><label for="heading-weight">Peso<select id="heading-weight" name="headingWeight"></select></label><label for="heading-size">Dimensione <output id="heading-size-value" for="heading-size">100%</output><input id="heading-size" name="headingSize" type="range" min="80" max="120" step="1" value="100"></label></div>
+      </fieldset>
+      <fieldset class="type-card"><legend>TESTI</legend>
+        <label for="text-font">Famiglia<select id="text-font" name="texts"></select></label>
+        <div class="control-row"><label for="text-weight">Peso<select id="text-weight" name="textWeight"></select></label><label for="text-size">Dimensione <output id="text-size-value" for="text-size">100%</output><input id="text-size" name="textSize" type="range" min="80" max="120" step="1" value="100"></label></div>
+      </fieldset>
+      <div class="reset-row"><button id="reset" type="button">Reset</button></div>
+    </form>
+    <section id="viewer" class="viewer" aria-label="Anteprime tipografiche">
+      <div class="viewer-toolbar"><strong id="pair-name">Manrope / Nunito Sans</strong><span class="toolbar-secondary">Tutte le anteprime · 16:9</span></div>
+      <div id="previews" class="previews"></div>
+    </section>
+    <section class="decision"><div><h2>Una coppia da condividere.</h2><p>Il link conserva famiglie, pesi e dimensioni di titoli e testi.</p></div><div class="decision-actions"><button class="primary" id="copy" type="button">Copia link della scelta</button></div></section>
+    <p id="status" role="status" class="status"></p>
+    <div id="link-fallback" hidden><label for="share-url">Copia questo link:</label><input id="share-url" readonly></div>
+    <p id="font-status" role="status" class="font-status">Caricamento dei font da Google Fonts…</p>
+  </main>
+  <footer class="wrap"><span>FELS THERAPEUTICS <span class="slash">/</span> TYPOGRAPHY EXPLORER</span><span>Esempi 16:9 · Contenuti dimostrativi</span></footer>
+  <noscript><p class="wrap">Attiva JavaScript per vedere le tre anteprime e confrontare le famiglie tipografiche.</p></noscript>
+</body>
+</html>
