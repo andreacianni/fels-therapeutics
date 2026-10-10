@@ -3,7 +3,7 @@
 const BRAND_COLORS = {
   amber: {name: 'Amber', hex: '#F2A65A', note: 'Caldo e misurato'},
   molecularOrange: {name: 'Molecular Orange', hex: '#FF9400', note: 'Netto ed energico'},
-  custom: {name: 'Custom', hex: '#F00059', note: 'Il tuo colore'}
+  custom: {name: 'Custom', hex: '#44E49F', note: 'Il tuo colore'}
 };
 const DEFAULT_CUSTOM_HEX = BRAND_COLORS.custom.hex;
 function normalizeHex(value) {
